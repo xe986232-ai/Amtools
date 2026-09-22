@@ -59,6 +59,7 @@ export default function AttendanceDashboard() {
   // connection / mode state
   const [connected, setConnected] = useState(false);
   const [mode, setModeState] = useState<AppMode>('normal');
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   // form inputs
   const [newUid, setNewUid] = useState('');
@@ -120,6 +121,7 @@ export default function AttendanceDashboard() {
   const processSpeechQueue = useCallback(async () => {
     if (speakingRef.current || speechQueueRef.current.length === 0) return;
     speakingRef.current = true;
+    setIsSpeaking(true);
     const text = speechQueueRef.current.shift() as string;
 
     try {
@@ -130,6 +132,9 @@ export default function AttendanceDashboard() {
     }
 
     speakingRef.current = false;
+    if (speechQueueRef.current.length === 0) {
+      setIsSpeaking(false);
+    }
     processSpeechQueue();
   }, [speakWithFish, speakWithBrowser]);
 
@@ -274,9 +279,17 @@ export default function AttendanceDashboard() {
           <div className="title">Konsol Absensi RFID</div>
           <div className="project">absen-ea176</div>
         </div>
-        <div className={`status-pill${connected ? ' connected' : ''}`}>
-          <span className="status-dot" />
-          {connected ? 'Terhubung' : 'Belum terhubung'}
+        <div className="header-pills">
+          {isSpeaking && (
+            <div className="voice-pill">
+              <span className="voice-dot" />
+              Memproses suara...
+            </div>
+          )}
+          <div className={`status-pill${connected ? ' connected' : ''}`}>
+            <span className="status-dot" />
+            {connected ? 'Terhubung' : 'Belum terhubung'}
+          </div>
         </div>
       </header>
 
@@ -314,8 +327,9 @@ export default function AttendanceDashboard() {
       {mode === 'normal' && (
         <div id="panelAbsensi">
           <div className="panel-note">
-            Tap kartu ke pembaca RFID. Kartu terdaftar akan diumumkan lewat suara dan tercatat di
-            bawah.
+            {isSpeaking
+              ? 'Memproses pengumuman suara, mohon tunggu sebentar...'
+              : 'Tap kartu ke pembaca RFID. Kartu terdaftar akan diumumkan lewat suara dan tercatat di bawah.'}
           </div>
           <table>
             <thead>
@@ -460,6 +474,40 @@ export default function AttendanceDashboard() {
           font-size: 0.75rem;
           color: var(--muted);
           margin-top: 3px;
+        }
+        .header-pills {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 6px;
+        }
+        .voice-pill {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          font-family: var(--mono);
+          font-size: 0.72rem;
+          color: var(--accent);
+          white-space: nowrap;
+        }
+        .voice-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: var(--accent);
+          box-shadow: 0 0 0 3px rgba(221, 181, 45, 0.25);
+          flex-shrink: 0;
+          animation: voice-pulse 1s ease-in-out infinite;
+        }
+        @keyframes voice-pulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.4;
+            transform: scale(0.7);
+          }
         }
         .status-pill {
           display: flex;
