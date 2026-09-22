@@ -1,4 +1,5 @@
 import "./globals.css";
+import TopNav from "@/components/TopNav";
 
 export const metadata = {
   title: "Fish Audio TTS Demo",
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <body>{children}</body>
+      <body>
+        <TopNav />
+        {children}
+      </body>
     </html>
   );
 }
