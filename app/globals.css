@@ -108,3 +108,24 @@ audio {
   font-size: 0.8rem;
   margin-top: 6px;
 }
+
+.voice-input {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1a1a1c;
+  color: #f2f2f2;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.voice-input:focus {
+  outline: none;
+  border-color: #6ea8fe;
+}
+
+.voice-input::placeholder {
+  color: #777;
+}

@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 
 export default function Home() {
   const [text, setText] = useState("Halo, ini adalah tes text-to-speech pakai Fish Audio.");
+  const [voiceId, setVoiceId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export default function Home() {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, reference_id: voiceId.trim() || undefined }),
       });
 
       if (!res.ok) {
@@ -49,6 +50,14 @@ export default function Home() {
         placeholder="Ketik teks yang mau diubah jadi suara..."
       />
       <div className="char-count">{text.length} karakter</div>
+
+      <input
+        type="text"
+        className="voice-input"
+        value={voiceId}
+        onChange={(e) => setVoiceId(e.target.value)}
+        placeholder="Voice ID (opsional, kosongkan buat suara default) — cari di fish.audio"
+      />
 
       <div className="row">
         <button onClick={handleGenerate} disabled={loading || !text.trim()}>

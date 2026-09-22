@@ -11,15 +11,26 @@ export async function POST(req: NextRequest) {
   }
 
   let text: string;
+  let referenceId: string | undefined;
   try {
     const body = await req.json();
     text = body.text;
+    referenceId = body.reference_id;
   } catch {
     return NextResponse.json({ error: "Body request tidak valid" }, { status: 400 });
   }
 
   if (!text || typeof text !== "string" || !text.trim()) {
     return NextResponse.json({ error: "Teks tidak boleh kosong" }, { status: 400 });
+  }
+
+  const fishBody: Record<string, unknown> = {
+    text,
+    format: "mp3",
+  };
+
+  if (referenceId && typeof referenceId === "string" && referenceId.trim()) {
+    fishBody.reference_id = referenceId.trim();
   }
 
   const fishRes = await fetch("https://api.fish.audio/v1/tts", {
@@ -29,10 +40,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/json",
       model: "s2.1-pro-free",
     },
-    body: JSON.stringify({
-      text,
-      format: "mp3",
-    }),
+    body: JSON.stringify(fishBody),
   });
 
   if (!fishRes.ok) {
