@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import {
   getDatabase,
@@ -36,6 +36,10 @@ interface LogRow {
 
 type AppMode = 'normal' | 'register';
 
+// ---------- Fish Audio voice model ----------
+// Satu-satunya model suara yang dipakai di seluruh aplikasi ini.
+const FISH_VOICE_ID = 'b2c63324fb864a80b39b0c198ea23034';
+
 // ---------- Firebase config ----------
 // NOTE: Firebase web config values are safe to expose client-side; access is
 // controlled by your Realtime Database security rules, not by hiding this object.
@@ -57,7 +61,6 @@ export default function AttendanceDashboard() {
   const [mode, setModeState] = useState<AppMode>('normal');
 
   // form inputs
-  const [voiceInput, setVoiceInput] = useState('');
   const [newUid, setNewUid] = useState('');
   const [newName, setNewName] = useState('');
   const [addMsg, setAddMsg] = useState<{ text: string; ok: boolean } | null>(null);
@@ -67,7 +70,6 @@ export default function AttendanceDashboard() {
   const [employees, setEmployees] = useState<Employee[]>([]);
 
   // refs that must not trigger re-render
-  const fishVoiceIdRef = useRef('');
   const speechQueueRef = useRef<string[]>([]);
   const speakingRef = useRef(false);
   const knownAttendanceRef = useRef<Record<string, number>>({});
@@ -75,17 +77,6 @@ export default function AttendanceDashboard() {
   const modeRef = useRef<AppMode>('normal');
   const dbRef = useRef<Database | null>(null);
   const appRef = useRef<FirebaseApp | null>(null);
-
-  // ---------- Restore saved TTS settings on mount ----------
-  useEffect(() => {
-    try {
-      const savedVoice = localStorage.getItem('fish_tts_voice_id') || '';
-      fishVoiceIdRef.current = savedVoice;
-      if (savedVoice) setVoiceInput(savedVoice);
-    } catch {
-      // localStorage unavailable
-    }
-  }, []);
 
   // ---------- Speech queue ----------
 
@@ -105,11 +96,10 @@ export default function AttendanceDashboard() {
   }, []);
 
   const speakWithFish = useCallback(async (text: string) => {
-    const referenceId = fishVoiceIdRef.current.trim();
     const res = await fetch('/api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, reference_id: referenceId || undefined }),
+      body: JSON.stringify({ text, reference_id: FISH_VOICE_ID }),
     });
 
     if (!res.ok) {
@@ -209,13 +199,6 @@ export default function AttendanceDashboard() {
   // ---------- Connect ----------
 
   const connectFirebase = useCallback(() => {
-    fishVoiceIdRef.current = voiceInput.trim();
-    try {
-      localStorage.setItem('fish_tts_voice_id', fishVoiceIdRef.current);
-    } catch {
-      // ignore
-    }
-
     if (!appRef.current) {
       appRef.current = initializeApp(firebaseConfig);
     }
@@ -256,7 +239,7 @@ export default function AttendanceDashboard() {
     });
 
     setMode('normal');
-  }, [voiceInput, speak, handleEntry, setMode]);
+  }, [speak, handleEntry, setMode]);
 
   // ---------- Add employee ----------
 
@@ -302,20 +285,11 @@ export default function AttendanceDashboard() {
           <div className="project-line">
             Firebase project <b>absen-ea176</b> sudah otomatis terisi.
           </div>
-          <div className="field">
-            <label htmlFor="fishVoiceId">Voice ID Fish Audio (opsional)</label>
-            <input
-              id="fishVoiceId"
-              placeholder="kosongkan buat suara default — cari di fish.audio"
-              value={voiceInput}
-              onChange={(e) => setVoiceInput(e.target.value)}
-            />
-          </div>
           <button onClick={connectFirebase}>Hubungkan &amp; aktifkan suara</button>
           <div className="hint">
             Klik untuk memulai — browser memerlukan interaksi pengguna sebelum mengizinkan audio.
-            Suara pakai Fish Audio (model s2.1-pro-free) lewat server; kalau gagal, otomatis pakai
-            suara bawaan browser.
+            Suara pakai satu model voice Fish Audio yang sudah ditentukan lewat server; kalau
+            gagal, otomatis pakai suara bawaan browser.
           </div>
         </div>
       )}
