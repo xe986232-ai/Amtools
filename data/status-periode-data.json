@@ -10,5 +10,17 @@
     "periode": "Periode 2 (16-30)",
     "filename": "status-periode-kepala-tukang-p2.mp3",
     "teks": "Status sebagai, Kepala Tukang. Periode enam belas sampai tiga puluh."
+  },
+  {
+    "status": "Tukang",
+    "periode": "Periode 1 (1-15)",
+    "filename": "status-periode-tukang-p1.mp3",
+    "teks": "Status sebagai, Tukang. Periode satu sampai lima belas."
+  },
+  {
+    "status": "Tukang",
+    "periode": "Periode 2 (16-30)",
+    "filename": "status-periode-tukang-p2.mp3",
+    "teks": "Status sebagai, Tukang. Periode enam belas sampai tiga puluh."
   }
 ]
