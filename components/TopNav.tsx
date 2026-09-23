@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/", label: "TTS Demo" },
   { href: "/attendance", label: "Absensi" },
   { href: "/gaji", label: "Preview Gaji" },
+  { href: "/nama", label: "Preview Nama" },
 ];
 
 export default function TopNav() {
