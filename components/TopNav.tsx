@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/attendance", label: "Absensi" },
   { href: "/gaji", label: "Preview Gaji" },
   { href: "/nama", label: "Preview Nama" },
+  { href: "/status-periode", label: "Status & Periode" },
 ];
 
 export default function TopNav() {
