@@ -15,7 +15,7 @@ type GajiRow = {
 const rows = gajiData as GajiRow[];
 
 // Urutan kategori ditampilkan sesuai hierarki jabatan di lapangan.
-const STATUS_ORDER = ["Kepala Tukang", "Tukang", "Laden"];
+const STATUS_ORDER = ["Kepala Tukang", "Tukang", "Tukang 2", "Laden"];
 
 function formatRupiah(n: number) {
   return "Rp " + n.toLocaleString("id-ID");
