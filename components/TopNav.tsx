@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/gaji", label: "Preview Gaji" },
   { href: "/nama", label: "Preview Nama" },
   { href: "/status-periode", label: "Status & Periode" },
+  { href: "/preview-gabungan", label: "Preview Gabungan" },
 ];
 
 export default function TopNav() {
