@@ -34,5 +34,17 @@
     "periode": "Periode 2 (16-30)",
     "filename": "status-periode-laden-p2.mp3",
     "teks": "Status sebagai, Laden. Periode enam belas sampai tiga puluh."
+  },
+  {
+    "status": "Tukang 2",
+    "periode": "Periode 1 (1-15)",
+    "filename": "status-periode-tukang2-p1.mp3",
+    "teks": "Status sebagai, Tukang. Periode satu sampai lima belas."
+  },
+  {
+    "status": "Tukang 2",
+    "periode": "Periode 2 (16-30)",
+    "filename": "status-periode-tukang2-p2.mp3",
+    "teks": "Status sebagai, Tukang. Periode enam belas sampai tiga puluh."
   }
 ]
